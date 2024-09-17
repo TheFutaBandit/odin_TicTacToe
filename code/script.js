@@ -27,8 +27,17 @@ function Gameboard() {
     // }
 
     const printBoard = () => {
-        console.table(board);
+        for (let i = 0; i < board.length; i++) {
+            let row = [];
+            for (let j = 0; j < board[0].length; j++) {
+                row.push(board[i][j].getValue()); // Collect row values
+            }
+            console.log(`[${i}] ${row.join(' ')}`); // Add unique row index to each log
+        }
     }
+    
+    
+    
 
     const getBoard = () => {
         return board;
@@ -41,10 +50,11 @@ function Gameboard() {
 }
 
 function cell() {
-    let value = "";
+    let value = "F";
     let playerHit = {};
 
     const putValue = (player) => {
+        // console.log("hey")
         value = player.token;
         playerHit = player;
     }
@@ -152,29 +162,38 @@ function Gameflow(playerName1 = "Player1", playerName2 = "Player2") {
         askTurn(activePlayer);
         board.printBoard();
 
-        // let move = +(prompt("enter the number you want to enter"));
+        let row = +(prompt("enter the row you want to enter"));
+        let column = +(prompt("enter the column you want to enter"));
 
-        let currentBoard = board.getBoard();
+        let currentBoard = board.getBoard(); 
 
-        switchPlayer();  
+        if(row == 9 || column == 9) return;
 
-        currentBoard[0][0].putValue(activePlayer); 
-        currentBoard[1][1].putValue(activePlayer); 
-        currentBoard[2][2].putValue(activePlayer); 
+        let selectedCell = currentBoard[row][column];
+
+        if(selectedCell.getValue() != "F") {
+            console.log(`Wrong Move, Try again Please`);
+            playRound();
+        }
+        else selectedCell.putValue(activePlayer); 
+
+        // currentBoard[0][0].putValue(activePlayer); 
+        // currentBoard[1][1].putValue(activePlayer); 
+        // currentBoard[2][2].putValue(activePlayer); 
 
         let winCheck = winningCondition(currentBoard,activePlayer);
         let drawCheck = drawCondition();
 
         if(winCheck === false && drawCheck === false) {
             roundCounter.incrementCounter();
+            switchPlayer();
             playRound();
         }
         else {
             if(drawCheck == true) console.log(`It's a draw!`);
             else console.log(`The Winner is ${activePlayer.playerName}`);
-        }
-
-        switchPlayer();        
+            board.printBoard();
+        }       
     }
 
     return {
