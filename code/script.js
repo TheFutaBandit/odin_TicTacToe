@@ -50,7 +50,7 @@ function Gameboard() {
 }
 
 function cell() {
-    let value = "F";
+    let value = "";
     let playerHit = {};
 
     const putValue = (player) => {
@@ -158,20 +158,20 @@ function Gameflow(playerName1 = "Player1", playerName2 = "Player2") {
         else return false;
     }
 
-    function playRound() {
-        askTurn(activePlayer);
-        board.printBoard();
+    function playRound(row, column) {
+        // askTurn(activePlayer);
+        // board.printBoard();
 
-        let row = +(prompt("enter the row you want to enter"));
-        let column = +(prompt("enter the column you want to enter"));
+        // let row = +(prompt("enter the row you want to enter"));
+        // let column = +(prompt("enter the column you want to enter"));
 
         let currentBoard = board.getBoard(); 
 
-        if(row == 9 || column == 9) return;
+        // if(row == 9 || column == 9) return;
 
         let selectedCell = currentBoard[row][column];
 
-        if(selectedCell.getValue() != "F") {
+        if(selectedCell.getValue() != "") {
             console.log(`Wrong Move, Try again Please`);
             playRound();
         }
@@ -187,23 +187,62 @@ function Gameflow(playerName1 = "Player1", playerName2 = "Player2") {
         if(winCheck === false && drawCheck === false) {
             roundCounter.incrementCounter();
             switchPlayer();
-            playRound();
         }
         else {
             if(drawCheck == true) console.log(`It's a draw!`);
             else console.log(`The Winner is ${activePlayer.playerName}`);
-            board.printBoard();
+            // board.printBoard();
         }       
     }
 
     return {
         playRound,
-        getActivePlayer
+        getActivePlayer,
+        getCurrentBoard : board.getBoard()
     }
 }
 
-let game = Gameflow();
-game.playRound();
+function screenController() {
+    let game = Gameflow("Alex","Steve");
+    const turn = document.querySelector(".turn");
+    const board = document.querySelector(".board");
+
+    function updateScreen() {
+        board.textContent = "";
+
+        turn.textContent = `It's ${game.getActivePlayer().playerName}'s turn right now!`;
+
+        const currentBoard = game.getCurrentBoard;
+
+        currentBoard.forEach((row,rowNumber) => {
+            row.forEach((column, columnNumber) => {
+                const cell = document.createElement("button");
+                cell.classList.add("cell");
+                cell.dataset.row = rowNumber;
+                cell.dataset.column = columnNumber;
+                cell.textContent = currentBoard[rowNumber][columnNumber].getValue();
+                board.appendChild(cell);
+            })
+        })
+    }
+
+    function cellInput(e) {
+        const rowNumber = +(e.target.dataset.row);
+        const columnNumber = +(e.target.dataset.column);
+        console.log(rowNumber,columnNumber);
+
+        game.playRound(rowNumber,columnNumber);
+        updateScreen();
+    }
+
+    board.addEventListener("click", cellInput);
+
+    updateScreen();
+
+}
+
+screenController();
+
 
 
 
