@@ -106,14 +106,17 @@ function Gameflow(playerName1 = "Player1", playerName2 = "Player2") {
 
         const diagonalChecker = () => {
             let diagonalArray = [];
+            let antiDiagonalArray = [];
             for(let i = 0; i < currentBoard.length; i++) {
-                for(let j = 0; j < currentBoard[0].length; j++) {
-                    if(i == j) diagonalArray.push(currentBoard[i][j]);
-                }
+                diagonalArray.push(currentBoard[i][i]);
+                antiDiagonalArray.push(currentBoard[i][2-i]);
             }
+            const boolArray = [arrayChecker(diagonalArray),arrayChecker(antiDiagonalArray)];
+            let checkRow = boolArray.some(value => value === true);
+            return checkRow;
         }
 
-        return (rowChecker() || columnChecker());
+        return (rowChecker() || columnChecker() || diagonalChecker());
     }
 
     const roundCounter = (() => {
@@ -155,14 +158,14 @@ function Gameflow(playerName1 = "Player1", playerName2 = "Player2") {
 
         switchPlayer();  
 
-        currentBoard[0][2].putValue(activePlayer); 
-        currentBoard[1][2].putValue(activePlayer); 
+        currentBoard[0][0].putValue(activePlayer); 
+        currentBoard[1][1].putValue(activePlayer); 
         currentBoard[2][2].putValue(activePlayer); 
 
         let winCheck = winningCondition(currentBoard,activePlayer);
         let drawCheck = drawCondition();
 
-        if(winCheck === false || drawCheck === false) {
+        if(winCheck === false && drawCheck === false) {
             roundCounter.incrementCounter();
             playRound();
         }
