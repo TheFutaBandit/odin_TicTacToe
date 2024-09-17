@@ -41,7 +41,7 @@ function Gameboard() {
 }
 
 function cell() {
-    let value = "5";
+    let value = "";
     let playerHit = {};
 
     const putValue = (player) => {
@@ -81,25 +81,56 @@ function Gameflow(playerName1 = "Player1", playerName2 = "Player2") {
         console.log(`It's ${player.playerName}'s turn!`);
     }
 
+    function winningCondition(currentBoard,currentPlayer) {
+        const token = currentPlayer.token;
+
+        function arrayChecker(array) {
+            return array.every((item) => item.getValue() === currentPlayer.token);
+        }
+        
+        const rowChecker = () => {
+            let boolArray = currentBoard.map((row) => arrayChecker(row));
+            let checkRow = boolArray.some(value => value === true);
+            return checkRow;
+        }
+
+        const columnChecker = () => {
+            let boolArray = [];
+            for(let i = 0; i < currentBoard[0].length; i++) {
+                let columnArray = currentBoard.map((row) => row[i]);
+                boolArray.push(arrayChecker(columnArray));
+            }
+            let checkRow = boolArray.some(value => value === true);
+            return checkRow;
+        }
+
+        return (rowChecker() || columnChecker());
+    }
+
     function playRound() {
         askTurn(activePlayer);
         board.printBoard();
 
-        let move = +(prompt("enter the number you want to enter"));
-
-        // console.log(typeof(move));
+        // let move = +(prompt("enter the number you want to enter"));
 
         let currentBoard = board.getBoard();
 
-        // console.log(currentBoard[2][2]);
+        switchPlayer();  
 
-        currentBoard[move][move].putValue(activePlayer);
+        currentBoard[0][2].putValue(activePlayer); 
+        currentBoard[1][2].putValue(activePlayer); 
+        currentBoard[2][2].putValue(activePlayer); 
 
-        // let cellSelected = board[move][move];   
+        let winCheck = winningCondition(currentBoard,activePlayer);
 
-        switchPlayer();
+        if(winCheck === false) {
+            playRound();
+        }
+        else {
+            console.log(`The Winner is ${activePlayer.playerName}`);
+        }
 
-        console.log(currentBoard[move][move].getValue());
+        switchPlayer();        
     }
 
     return {
