@@ -151,12 +151,35 @@ function Gameflow(playerName1 = "Player1", playerName2 = "Player2") {
         }
     })();
 
+    const gameStatus = (() => {
+        let status = "ongoing";
+
+        function winStatus() {
+            status = "win";
+        }
+
+        function drawStatus() {
+            status = "draw";
+        }
+
+        function getStatus() {
+            return status;
+        }
+
+        return {
+            winStatus,
+            drawStatus,
+            getStatus
+        }
+    })();
+
     function drawCondition() {
-        if(roundCounter.checkCounter() == (3*3)) {
+        if(roundCounter.checkCounter() == (8)) {
             return true;
         }
         else return false;
     }
+
 
     function playRound(row, column) {
         // askTurn(activePlayer);
@@ -189,16 +212,16 @@ function Gameflow(playerName1 = "Player1", playerName2 = "Player2") {
             switchPlayer();
         }
         else {
-            if(drawCheck == true) console.log(`It's a draw!`);
-            else console.log(`The Winner is ${activePlayer.playerName}`);
-            // board.printBoard();
+            if(winCheck == true) gameStatus.winStatus();
+            else gameStatus.drawStatus();
         }       
     }
 
     return {
         playRound,
         getActivePlayer,
-        getCurrentBoard : board.getBoard()
+        getCurrentBoard : board.getBoard(),
+        gameStatus
     }
 }
 
@@ -214,6 +237,8 @@ function screenController() {
 
         const currentBoard = game.getCurrentBoard;
 
+        const currentStatus = game.gameStatus.getStatus();
+
         currentBoard.forEach((row,rowNumber) => {
             row.forEach((column, columnNumber) => {
                 const cell = document.createElement("button");
@@ -224,15 +249,28 @@ function screenController() {
                 board.appendChild(cell);
             })
         })
+
+        if(currentStatus != "ongoing") {
+            if(currentStatus == "win") {
+                turn.textContent = `${game.getActivePlayer().playerName} HAS WON`;
+                return;
+            }
+            else {
+                turn.textContent = "It's a draw bro";
+                return;
+            }
+        }
     }
 
     function cellInput(e) {
         const rowNumber = +(e.target.dataset.row);
         const columnNumber = +(e.target.dataset.column);
         console.log(rowNumber,columnNumber);
-
-        game.playRound(rowNumber,columnNumber);
-        updateScreen();
+        if(game.gameStatus.getStatus()!="ongoing") return;
+        if(game.getCurrentBoard[rowNumber][columnNumber].getValue() === "") {
+            game.playRound(rowNumber,columnNumber);
+            updateScreen();
+        }
     }
 
     board.addEventListener("click", cellInput);
@@ -240,6 +278,15 @@ function screenController() {
     updateScreen();
 
 }
+
+const resetButton = (() => {
+    const reset = document.querySelector(".reset-button");
+    reset.addEventListener("click", () => {
+        screenController();
+    })
+})();
+
+
 
 screenController();
 
