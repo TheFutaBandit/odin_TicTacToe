@@ -104,7 +104,45 @@ function Gameflow(playerName1 = "Player1", playerName2 = "Player2") {
             return checkRow;
         }
 
+        const diagonalChecker = () => {
+            let diagonalArray = [];
+            for(let i = 0; i < currentBoard.length; i++) {
+                for(let j = 0; j < currentBoard[0].length; j++) {
+                    if(i == j) diagonalArray.push(currentBoard[i][j]);
+                }
+            }
+        }
+
         return (rowChecker() || columnChecker());
+    }
+
+    const roundCounter = (() => {
+        let counter = 0;
+
+        let incrementCounter = () => {
+            counter++;
+        }
+
+        let resetCounter = () => {
+            counter = 0;
+        }
+
+        let checkCounter = () => {
+            return counter;
+        }
+
+        return {
+            incrementCounter,
+            resetCounter,
+            checkCounter
+        }
+    })();
+
+    function drawCondition() {
+        if(roundCounter.checkCounter() == (3*3)) {
+            return true;
+        }
+        else return false;
     }
 
     function playRound() {
@@ -122,12 +160,15 @@ function Gameflow(playerName1 = "Player1", playerName2 = "Player2") {
         currentBoard[2][2].putValue(activePlayer); 
 
         let winCheck = winningCondition(currentBoard,activePlayer);
+        let drawCheck = drawCondition();
 
-        if(winCheck === false) {
+        if(winCheck === false || drawCheck === false) {
+            roundCounter.incrementCounter();
             playRound();
         }
         else {
-            console.log(`The Winner is ${activePlayer.playerName}`);
+            if(drawCheck == true) console.log(`It's a draw!`);
+            else console.log(`The Winner is ${activePlayer.playerName}`);
         }
 
         switchPlayer();        
