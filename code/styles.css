@@ -1,10 +1,77 @@
+:root {
+    font-family: nunito,roboto,proxima-nova,"proxima nova",sans-serif;
+}
+
+html {
+    min-height: 100vh;
+}
+
+body {
+    min-height: 100vh;
+}
+
+.container {
+    min-height: 100vh;
+
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+
+    gap: 30px;
+}
+
 .board {
+    margin: 40px;
     display: grid;
+    background-color: black;
     grid-template-columns: repeat(3, 50px);
     grid-template-rows: repeat(3, 50px);
+    row-gap: 1px;
+    column-gap: 1px;
 }
 
 .cell {
     min-height: 50px;
     min-width: 50px;
+    border-style: none;
+    background-color: white;
+}
+
+.reset-button {
+    background-color:#FF4742;
+    border: 1px solid #FF4742;
+    min-height: 40px;
+    border-radius: 6px;
+    padding: 12px 14px;
+    color: white;
+    font-family: nunito,roboto,proxima-nova,"proxima nova",sans-serif;
+    font-size: 16px;
+    font-weight: 700;
+    cursor: pointer;
+    box-shadow: rgb(0,0,0 / 0.3) 1px 2px 4px;
+
+    box-sizing: border-box;
+    display: inline-block;
+
+    line-height: 16px;
+    outline: 0;
+
+    text-align: center;
+
+    text-rendering: geometricPrecision;
+
+    text-transform: none;
+    user-select: none;
+    -webkit-user-select: none;
+
+    touch-action: manipulation;
+
+    vertical-align: middle;
+}
+
+.reset-button:hover {
+    background-color: initial;
+    color: #FF4742;
+    background-position: 0 0;
 }
