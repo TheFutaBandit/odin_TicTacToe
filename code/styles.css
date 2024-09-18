@@ -1,5 +1,8 @@
 :root {
     font-family: nunito,roboto,proxima-nova,"proxima nova",sans-serif;
+    --button-color : #C96868;
+    --background-pallete: #FFF4EA;
+    --blue-pallete: #7EACB5;
 }
 
 html {
@@ -10,6 +13,12 @@ body {
     min-height: 100vh;
 }
 
+h1 {
+    color: var(--button-color);
+    padding: 0px;
+    margin: 0px;
+}
+
 .container {
     min-height: 100vh;
 
@@ -17,36 +26,45 @@ body {
     flex-direction: column;
     justify-content: center;
     align-items: center;
-
-    gap: 30px;
+    background-color: var(--background-pallete);
+    gap: 40px;
 }
 
 .board {
-    margin: 40px;
+    min-height: 200px;
+    min-width: 200px;
+    /* margin: 40px; */
     display: grid;
-    background-color: black;
-    grid-template-columns: repeat(3, 50px);
-    grid-template-rows: repeat(3, 50px);
-    row-gap: 1px;
-    column-gap: 1px;
+    background-color: var(--blue-pallete);
+    grid-template-columns: repeat(3, 1fr);
+    grid-template-rows: repeat(3, 1fr);
+    gap: 1.6px;
 }
 
 .cell {
     min-height: 50px;
     min-width: 50px;
     border-style: none;
-    background-color: white;
+    background-color: var(--background-pallete);
+    font-size: 24px;
+    color: var(--button-color);
+}
+
+.cell:hover {
+    cursor: pointer;
+    box-shadow: inset 1px 2px 4px rgb(0,0,0 / 0.7);
+    /* background-color: black; */
 }
 
 .reset-button {
-    background-color:#FF4742;
-    border: 1px solid #FF4742;
+    background-color: var(--button-color);
+    border: 1px solid var(--button-color);
     min-height: 40px;
     border-radius: 6px;
     padding: 12px 14px;
     color: white;
     font-family: nunito,roboto,proxima-nova,"proxima nova",sans-serif;
-    font-size: 16px;
+    font-size: 20px;
     font-weight: 700;
     cursor: pointer;
     box-shadow: rgb(0,0,0 / 0.3) 1px 2px 4px;
@@ -72,6 +90,6 @@ body {
 
 .reset-button:hover {
     background-color: initial;
-    color: #FF4742;
+    color: var(--button-color);
     background-position: 0 0;
 }

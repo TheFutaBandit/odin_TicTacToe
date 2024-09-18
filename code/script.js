@@ -252,7 +252,7 @@ function screenController() {
 
         if(currentStatus != "ongoing") {
             if(currentStatus == "win") {
-                turn.textContent = `${game.getActivePlayer().playerName} HAS WON`;
+                turn.textContent = `${game.getActivePlayer().playerName} has won!`;
                 return;
             }
             else {
